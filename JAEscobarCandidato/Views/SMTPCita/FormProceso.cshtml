@@ -1,0 +1,181 @@
+﻿@model object
+@{
+    ViewBag.Title = "FormProceso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>FormProceso</h2>
+@if (typeof((bool, string, Exception, ML.Postulacion)).IsInstanceOfType(Model))
+{
+    var mensaje = ((bool, string, Exception, ML.Postulacion))Model;
+    <div class="row">
+        <div class="alert alert-danger">
+            @mensaje.Item2
+        </div>
+    </div>
+}
+else
+{
+    ML.Postulacion postulacion = (ML.Postulacion)Model;
+    <div class="noto-sans-normal mt-2 row form-group">
+        <div class="p-3">
+            <div class="caja-componente-horizontal centrar-elemento romper-flex">
+                @Html.Label("Empresa", "Empresa", new { @class = "col-sm-2 control-label negritas" })
+                <div class="col-sm-4">
+                    @Html.DropDownList("Empresa.IdEmpresa", new SelectList(postulacion.Vacante.Empresa.Empresas, "IdEmpresa", "Nombre", 0), "Seleccione una empresa", new { @class = "form-control", @id = "ddlEmpresa" })
+                </div>
+                @Html.Label("Vacante", "Vacante", new { @class = "col-sm-2 control-label negritas" })
+                <div class="col-sm-3">
+                    @Html.DropDownList("Vacante.IdVacante", new SelectList(new List<ML.Vacante>(), "IdVacante", "Nombre"), "Seleccione una Vacante", new { @class = "form-control", @id = "ddlVacante", @disabled = true })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>ApellidoPaterno</th>
+                    <th>ApellidoMaterno</th>
+                    <th>Email</th>
+                    <th>Genero</th>
+                    <th>FechaNacimiento</th>
+                    <th>Telefono</th>
+                    <th>Estado</th>
+                    <th>Vacante</th>
+                    <th>Enviar Correo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in postulacion.Postulaciones)
+                {
+                    <tr>
+                        <td>@item.Candidato.Nombre</td>
+                        <td>@item.Candidato.ApellidoPaterno</td>
+                        <td>@item.Candidato.ApellidoMaterno</td>
+                        <td>@item.Candidato.Email</td>
+                        <td>@item.Candidato.Genero</td>
+                        <td>@item.Candidato.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Candidato.Telefono</td>
+                        <td>@item.StatusPostulacion.Nombre</td>
+                        <td>@item.Vacante.Nombre</td>
+                        <td>
+                            <div class="caja-componente-vertical p-2">
+                                <a href="@Url.Action("Procesamiento", new { idCandidato = item.Candidato.IdCandidato })" id="Procesar" class="btn btn-primary">Seleccionar</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script>
+    $(document).ready(() => {
+        let empresa = $('#ddlEmpresa')
+        let vacante = $('#ddlVacante')
+        empresa.on('change keypress', (event) => {
+            let options = $(event.target).prop('options').selectedIndex
+            options = $($(event.target).prop('options')[options]).prop('value')
+            if (options > 0) {
+                $.ajax({
+                    url: "@Url.Action("VacanteEmpresa", "DashBoard")",
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: { idEmpresa: options },
+                    success: function (result) {
+                        const { Item1, Item4 } = result
+                        if (Item1) {
+                            vacante.empty()
+                            vacante.prop('disabled', false)
+                            vacante.append($('<option>', { value: 0, text: 'Seleccione una opcion' }))
+                            Item4.Vacantes.forEach((value, index, array) => {
+                                vacante.append($('<option>', { value: value.IdVacante, text: value.Nombre }))
+                            })
+                        } else {
+                            alert('Empresa no seleccionada')
+                            if ($('.table-responsive > *').is($('.alert'))) {
+                                $('.table-responsive').empty()
+                                tabla.empty().append(tbody)
+                                $('.table-responsive').append(tabla)
+                            }
+                            vacante.prop('disabled', true)
+                        }
+                    },
+                    error: function (result) {
+                        alert('No existen vacantes')
+                        vacante.prop('disabled', true)
+                    }
+                })
+            } else {
+                alert('Se debe seleccionar una empresa')
+                vacante.prop('disabled', true).empty().append($('<option>', {text : "Seleccione una vacante"}))
+                if ($('.table-responsive > *').is($('.alert'))) {
+                    $('.table-responsive').empty()
+                    $.ajax({
+                        url: "@Url.Action("CargarProcesados")",
+                        method: "GET",
+                        dataType: "JSON",
+                        success: function (result) {
+                            const { Item1, Item2, Item3, Item4 } = result
+                            if (Item1) {
+                                console.log(Item4)
+                            }
+                        },
+                        error: function (result) {
+                            const { Item1, Item2, Item3, Item4 } = result
+                        }
+                    })
+                }
+            }
+        })
+        vacante.on('change keypress', (event) => {
+            let options = $(event.target).prop('options').selectedIndex
+            options = $($(event.target).prop('options')[options]).prop('value')
+            $.ajax({
+                url: "@Url.Action("SeleccionVacante", "DashBoard")",
+                method: 'POST',
+                dataType: 'JSON',
+                data: { idVacante: options },
+                success: function (result) {
+                    const { Item1, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive > *').is($('.alert'))) {
+                            $('.table-responsive').empty()
+                            $('.table-responsive').append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let fila = $('tbody tr')
+                        Item4.Postulaciones.forEach((value, index) => {
+                            const { Candidato, StatusPostulacion, Vacante } = value
+                            let fecha = convertir_fecha(Candidato.FechaNacimiento)
+                            fila.append($('<td>', { text: Candidato.Nombre }))
+                                .append($('<td>', { text: Candidato.ApellidoPaterno }))
+                                .append($('<td>', { text: Candidato.ApellidoMaterno }))
+                                .append($('<td>', { text: Candidato.Email }))
+                                .append($('<td>', { text: Candidato.Genero }))
+                                .append($('<td>', { text: fecha }))
+                                .append($('<td>', { text: Candidato.Telefono }))
+                                .append($('<td>', { text: StatusPostulacion.Nombre }))
+                                .append($('<td>', { text : Vacante.Nombre}))
+                                .append(
+                                    $('<div>').addClass('caja-componente-vertical p-2')
+                                        .append($('<a>', { text: "Seleccionar", href: "@Url.Action("Procesamiento")?idCandidato=" + Candidato.IdCandidato }).addClass('btn btn-primary')))
+                        })
+                    } else {
+                        $('.table-responsive').empty().append($('<div>', {text: 'No existe resultados de esta búsqueda'}).addClass('alert alert-info row text-center'))
+                    }
+                },
+             })
+        })
+        let convertir_fecha = (cadenaUNIX) => {
+            let inicio = cadenaUNIX.indexOf('(') + 1
+            let final = cadenaUNIX.lastIndexOf(')')
+            let format = new Date(parseInt(cadenaUNIX.substring(inicio, final)))
+            const [dia, mes, año] = [format.getDate(), format.getMonth(), format.getFullYear()]
+            return `${dia}/${mes}/${año}`
+        }
+    })
+</script>

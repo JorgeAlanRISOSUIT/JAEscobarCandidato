@@ -1,0 +1,518 @@
+﻿@model object
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Index</h2>
+@if (typeof((bool, string, Exception, ML.Postulacion)).IsInstanceOfType(Model))
+{
+    var result = ((bool, string, Exception, ML.Postulacion))Model;
+    <div class="noto-sans-normal caja-componente-horizontal centrar-elemento">
+        <div class="alert alert-danger">
+            @result.Item2
+        </div>
+    </div>
+}
+else
+{
+    var result = (Model as ML.Postulacion);
+    <div class="noto-sans-normal row form-group mt-2">
+        <div class="p-2">
+            <div class="caja-componente-horizontal centrar-elemento romper-flex">
+                <label class="col-sm-2 control-label negritas" for="Empresa">Empresas</label>
+                <div class="col-sm-4">
+                    <select class="form-control" name="Empresa.IdEmpresa" id="ddlEmpresa">
+                        <option value="0">Seleccione una empresa</option>
+                        @foreach (var item in result.Vacante.Empresa.Empresas)
+                        {
+                            <option value="@item.IdEmpresa">@item.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <label class="col-sm-2" for="Vacante">Vacantes</label>
+                <div class="col-sm-3">
+                    <select class="form-control" name="Vacante.IdVacante" id="ddlVacante" disabled>
+                        <option value="0">Seleccione una vacante</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="caja-componente-horizontal centrar-elemento row">
+                <div class="col-sm-3">
+                    <button class="btn btn-info" id="btnTodos">Todos</button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-danger" id="btnDescartados">Descartados</button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-warning" id="btnPausados">Pausados</button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-success" id="btnAceptados">Aceptados</button>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-primary" id="btnProcesos">En proceso</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive noto-sans-normal row">
+        <table class="table table-hover table-striped table-bordered text-center">
+            <thead>
+                <tr class="text-center noto-sans-normal">
+                    <th>Nombre</th>
+                    <th>ApellidoPaterno</th>
+                    <th>ApellidoMaterno</th>
+                    <th>Email</th>
+                    <th>Genero</th>
+                    <th>FechaNacimiento</th>
+                    <th>Telefono</th>
+                    <th>Pruebas</th>
+                    <th>Status</th>
+                    <th>Nombre Vacante</th>
+                    <th>Fecha Publicacion</th>
+                    <th>Nombre de la empresa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in result.Postulaciones)
+                {
+                    <tr>
+                        <td>@item.Candidato.Nombre</td>
+                        <td>@item.Candidato.ApellidoPaterno</td>
+                        <td>@item.Candidato.ApellidoMaterno</td>
+                        <td>@item.Candidato.Email</td>
+                        <td>@item.Candidato.Genero</td>
+                        <td>@item.Candidato.FechaNacimiento</td>
+                        <td>@item.Candidato.Telefono</td>
+                        <td>
+                            <div class="caja-componente-vertical centrar-elemento">
+                                <div class="btn btn-default">
+                                    @item.Candidato.Estres.Nombre
+                                </div>
+                                <div class="btn btn-default">
+                                    @item.Candidato.AutoEstima.Nombre
+                                </div>
+                                <div class="btn btn-default">
+                                    @item.Candidato.Personalidad.Nombre
+                                </div>
+                                <div class="btn btn-default">
+                                    @item.Candidato.Sinceridad.Nombre
+                                </div>
+
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn @(item.StatusPostulacion.IdStatusPostulacion == 1 ? "btn-success":
+                                              item.StatusPostulacion.IdStatusPostulacion == 2 ? "btn-danger":
+                                              item.StatusPostulacion.IdStatusPostulacion == 3 ? "btn-info": "btn-warning")">
+                                @item.StatusPostulacion.Nombre
+                            </div>
+                        </td>
+                        <td>@item.Vacante.Nombre</td>
+                        <td>@item.Vacante.FechaPublicacion</td>
+                        <td>@item.Vacante.Empresa.Nombre</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script>
+    $(document).ready(() => {
+        let empresa = $('#ddlEmpresa')
+        let vacante = $('#ddlVacante')
+        let btnTodos = $('#btnTodos')
+        let btnDescartados = $('#btnDescartados')
+        let btnPausados = $('#btnPausados')
+        let btnAceptados = $('#btnAceptados')
+        let btnProcesos = $('#btnProcesos')
+        let tabla = $('.table-responsive table')
+        empresa.on("change keypress", (event) => {
+            let value = $(event.target).prop('options').selectedIndex
+            if (value === 0) {
+                alert('Se debe de escoger una empresa existente')
+                $('#ddlVacante').prop('disabled', true)
+            } else {
+                $.ajax({
+                    url: "@Url.Action("VacanteEmpresa", "DashBoard")",
+                    method: "POST",
+                    dataType: 'JSON',
+                    data: { idEmpresa: value },
+                    success: function (result) {
+                        if (result.Item1) {
+                            $('#ddlVacante').empty()
+                            $('#ddlVacante').append($('<option>', { value: 0, text: 'Seleccione una vacante' }))
+                            $('#ddlVacante').prop('disabled', false)
+                            let listaVacanteEmpresa = result.Item4.Vacantes
+                            $(listaVacanteEmpresa).each((index, element) => {
+                                $('#ddlVacante').append($('<option>', { value: element.IdVacante, text: element.Nombre }))
+                            })
+                        } else {
+                            alert(result.Item2)
+                        }
+                    },
+                    error: function (result) {
+                        alert(result)
+                    }
+                })
+            }
+        })
+        vacante.on("change keypress", (event) => {
+            let value = $(event.target).prop('options').selectedIndex
+            let valor = $(event.target).prop('options')[value]
+            if (value == 0) {
+                alert('debe seleccionar una vacante')
+            } else {
+                $.ajax({
+                    url: "@Url.Action("SeleccionVacante")",
+                    method: "POST",
+                    dataType: "JSON",
+                    data: { idVacante: $(valor).prop('value') },
+                    success: function (result) {
+                        if (result.Item1) {
+                            if ($('.table-responsive .alert') !== null) {
+                                $('.table-responsive').empty().append(tabla)
+                            }
+                            let tableBody = $('tbody')
+                            tableBody.empty()
+                            tableBody.append($('<tr>'))
+                            let row = $('tbody tr')
+                            let tablaPostulaciones = result.Item4.Postulaciones.length
+                            if (tablaPostulaciones > 0) {
+                                const { Postulaciones } = result.Item4
+                                $(Postulaciones).each((index, element) => {
+                                    const { Candidato, StatusPostulacion, Vacante } = element
+                                    row.append($('<td>').append(Candidato.Nombre))
+                                    row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                    row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                    row.append($('<td>').append(Candidato.Email))
+                                    row.append($('<td>').append(Candidato.Genero))
+                                    let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                    row.append($('<td>').append(fechaNacimiento))
+                                    row.append($('<td>').append(Candidato.Telefono))
+                                    let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                    row.append($('<td>').append($(status).prepend(
+                                        $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                        $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                        $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                        $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                    )))
+                                    row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                    row.append($('<td>').append(Vacante.Nombre))
+                                    let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                    row.append($('<td>').append(fechaPublicacion))
+                                    row.append($('<td>').append(Vacante.Empresa.Nombre))
+                                })
+                            }
+                        } else {
+                            $('.table-responsive').empty()
+                            $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                .append('<div>').addClass('alert alert-info').append($('<p>', {text: result.Item2}))
+                            )
+                        }
+                    },
+                    error: function (result) {
+                        alert(result.Item2)
+                    }
+                })
+            }
+        })
+        btnTodos.on("click keypress", (event) => {
+            let option = $('#ddlVacante').prop('options').selectedIndex
+            option = $('#ddlVacante').prop('options')[option]
+            $.ajax({
+                url: "@Url.Action("SeleccionarTodos")",
+                method: "GET",
+                dataType: "JSON",
+                data: { idVacante: () => $(option).prop('value') !== 0 ? $(option).prop('value'): null },
+                success: function (result) {
+                    const { Item1, Item2, Item3, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive .alert') !== null) {
+                            $('.table-responsive').empty().append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let row = $('tbody tr')
+                        if (Item4.Postulaciones.length > 0) {
+                            $(Item4.Postulaciones).each((index, element) => {
+                                const { Candidato, StatusPostulacion, Vacante } = element
+                                row.append($('<td>').append(Candidato.Nombre))
+                                row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                row.append($('<td>').append(Candidato.Email))
+                                row.append($('<td>').append(Candidato.Genero))
+                                let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaNacimiento))
+                                row.append($('<td>').append(Candidato.Telefono))
+                                let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                row.append($('<td>').append($(status).prepend(
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                )))
+                                row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                row.append($('<td>').append(Vacante.Nombre))
+                                let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaPublicacion))
+                                row.append($('<td>').append(Vacante.Empresa.Nombre))
+                            })
+                        } else {
+                            $('.table-responsive').empty().append(
+                                $('<div>').addClass('alert alert-info').append(
+                                    $('<p>', { text: Item2 })
+                                )
+                            )
+                        }
+                    } else {
+                        $('.table-responsive').empty()
+                        $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                            .append('<div>').addClass('alert alert-info').append($('<p>', { text: result.Item2 }))
+                        )
+                    }
+                },
+                error: function (result) {
+                    console.log(result.Item2)
+                }
+            })
+        })
+        btnDescartados.on("click keypress", (event) => {
+            let options = $('#ddlVacante').prop('options').selectedIndex
+            options = $('#ddlVacante').prop('options')[options]
+            $.ajax({
+                url: "@Url.Action("SeleccionarDescartados")",
+                method: "POST",
+                dataType: "JSON",
+                data: { idVacante: () => $(options).prop('value') !== 0 ? $(options).prop('value'):null , idDescartados : 2 },
+                success: function (result) {
+                    const { Item1, Item2, Item3, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive .alert') !== null) {
+                            $('.table-responsive').empty().append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let row = $('tbody tr')
+                        if (Item4.Postulaciones.length > 0) {
+                            $(Item4.Postulaciones).each((index, element) => {
+                                const { Candidato, StatusPostulacion, Vacante } = element
+                                row.append($('<td>').append(Candidato.Nombre))
+                                row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                row.append($('<td>').append(Candidato.Email))
+                                row.append($('<td>').append(Candidato.Genero))
+                                let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaNacimiento))
+                                row.append($('<td>').append(Candidato.Telefono))
+                                let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                row.append($('<td>').append($(status).prepend(
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                )))
+                                row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                row.append($('<td>').append(Vacante.Nombre))
+                                let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaPublicacion))
+                                row.append($('<td>').append(Vacante.Empresa.Nombre))
+                            })
+                        } else {
+                            $('.table-responsive').empty().append(
+                                $('<div>').addClass('alert alert-info').append(
+                                    $('<p>', { text: Item2 })
+                                )
+                            )
+                        }
+                    } else {
+                        $('.table-responsive').empty()
+                        $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                            .append('<div>').addClass('alert alert-info').append($('<p>', { text: result.Item2 }))
+                        )
+                    }
+                },
+                error: function (result) { }
+            })
+        })
+        btnPausados.on("click keypress", (event) => {
+            let options = $('#ddlVacante').prop('options').selectedIndex
+            options = $('#ddlVacante').prop('options')[options]
+            $.ajax({
+                url: "@Url.Action("SeleccionarPausados")",
+                method: "POST",
+                dataType: "JSON",
+                data: { idVacante: () => $(options).prop('value') !== 0 ? $(options).prop('value'):null, idPausados: 4},
+                success: function (result) {
+                    const { Item1, Item2, Item3, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive .alert') !== null) {
+                            $('.table-responsive').empty().append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let row = $('tbody tr')
+                        if (Item4.Postulaciones.length > 0) {
+                            $(Item4.Postulaciones).each((index, element) => {
+                                const { Candidato, StatusPostulacion, Vacante } = element
+                                row.append($('<td>').append(Candidato.Nombre))
+                                row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                row.append($('<td>').append(Candidato.Email))
+                                row.append($('<td>').append(Candidato.Genero))
+                                let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaNacimiento))
+                                row.append($('<td>').append(Candidato.Telefono))
+                                let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                row.append($('<td>').append($(status).prepend(
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                )))
+                                row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                row.append($('<td>').append(Vacante.Nombre))
+                                let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaPublicacion))
+                                row.append($('<td>').append(Vacante.Empresa.Nombre))
+                            })
+                        } else {
+                            $('.table-responsive').empty().append(
+                                $('<div>').addClass('alert alert-info').append(
+                                    $('<p>', { text: Item2 })
+                                )
+                            )
+                        }
+                    } else {
+                        $('.table-responsive').empty()
+                        $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                            .append('<div>').addClass('alert alert-info').append($('<p>', { text: result.Item2 }))
+                        )
+                    }
+                },
+                error: function (result) { }
+            })
+        })
+        btnAceptados.on("click keypress", (event) => {
+            let options = $('#ddlVacante').prop('options').selectedIndex
+            options = $('#ddlVacante').prop('options')[options]
+            $.ajax({
+                url: "@Url.Action("SeleccionarAceptados")",
+                method: "POST",
+                dataType: "JSON",
+                data: { idVacante: () => $(options).prop('value') !== 0 ? $(options).prop('value') : null, idAceptados: 1 },
+                success: function (result) {
+                    const { Item1, Item2, Item3, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive .alert') !== null) {
+                            $('.table-responsive').empty().append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let row = $('tbody tr')
+                        if (Item4.Postulaciones.length > 0) {
+                            $(Item4.Postulaciones).each((index, element) => {
+                                const { Candidato, StatusPostulacion, Vacante } = element
+                                row.append($('<td>').append(Candidato.Nombre))
+                                row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                row.append($('<td>').append(Candidato.Email))
+                                row.append($('<td>').append(Candidato.Genero))
+                                let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaNacimiento))
+                                row.append($('<td>').append(Candidato.Telefono))
+                                let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                row.append($('<td>').append($(status).prepend(
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                )))
+                                row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                row.append($('<td>').append(Vacante.Nombre))
+                                let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaPublicacion))
+                                row.append($('<td>').append(Vacante.Empresa.Nombre))
+                            })
+                        } else {
+                            $('.table-responsive').empty().append(
+                                $('<div>').addClass('alert alert-info').append(
+                                    $('<p>', { text: Item2 })
+                                )
+                            )
+                        }
+                    } else {
+                        $('.table-responsive').empty()
+                        $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                            .append('<div>').addClass('alert alert-info').append($('<p>', { text: result.Item2 }))
+                        )
+                    }
+                },
+                error: function (result) { }
+            })
+        })
+        btnProcesos.on("click keypress", (event) => {
+            let options = $('#ddlVacante').prop('options').selectedIndex
+            options = $('#ddlVacante').prop('options')[options]
+            $.ajax({
+                url: "@Url.Action("SeleccionarProcesos")",
+                method: "POST",
+                dataType: "JSON",
+                data: { idVacante: () => $(options).prop('value') !== 0 ? $(options).prop('value'): null, idProcesos: 3 },
+                success: function (result) {
+                    const { Item1, Item2, Item3, Item4 } = result
+                    if (Item1) {
+                        if ($('.table-responsive .alert') !== null) {
+                            $('.table-responsive').empty().append(tabla)
+                        }
+                        $('tbody').empty().append($('<tr>'))
+                        let row = $('tbody tr')
+                        if (Item4.Postulaciones.length > 0) {
+                            $(Item4.Postulaciones).each((index, element) => {
+                                const { Candidato, StatusPostulacion, Vacante } = element
+                                row.append($('<td>').append(Candidato.Nombre))
+                                row.append($('<td>').append(Candidato.ApellidoPaterno))
+                                row.append($('<td>').append(Candidato.ApellidoMaterno))
+                                row.append($('<td>').append(Candidato.Email))
+                                row.append($('<td>').append(Candidato.Genero))
+                                let fechaNacimiento = new Date(parseInt(Candidato.FechaNacimiento.substring(6, Candidato.FechaNacimiento.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaNacimiento))
+                                row.append($('<td>').append(Candidato.Telefono))
+                                let status = $('<div>').addClass('caja-componente-vertical centrar-elemento')
+                                row.append($('<td>').append($(status).prepend(
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Estres.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.AutoEstima.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Personalidad.Nombre),
+                                    $('<div>').addClass('btn btn-default').append(Candidato.Sinceridad.Nombre)
+                                )))
+                                row.append($('<td>').append(diseño(StatusPostulacion.IdStatusPostulacion, $('<div>'), StatusPostulacion.Nombre)))
+                                row.append($('<td>').append(Vacante.Nombre))
+                                let fechaPublicacion = new Date(parseInt(Vacante.FechaPublicacion.substring(6, Vacante.FechaPublicacion.lastIndexOf(')'))))
+                                row.append($('<td>').append(fechaPublicacion))
+                                row.append($('<td>').append(Vacante.Empresa.Nombre))
+                            })
+                        } else {
+                            $('.table-responsive').empty().append(
+                                $('<div>').addClass('alert alert-info').append(
+                                    $('<p>', { text: Item2 })
+                                )
+                            )
+                        }
+                    } else {
+                        $('.table-responsive').empty()
+                        $('.table-responsive').append($('<div>').addClass('caja-componente-vertical centrar-elemento')
+                            .append('<div>').addClass('alert alert-info').append($('<p>', { text: result.Item2 }))
+                        )
+                    }
+                },
+                error: function (result) { }
+            })
+        })
+        let diseño = (indexStatus, domElement, nombre) => indexStatus === 1 ? $(domElement).addClass("btn btn-success").append(nombre) :
+            indexStatus === 2 ? $(domElement).addClass("btn btn-danger").append(nombre) :
+                indexStatus === 3 ? $(domElement).addClass("btn btn-info").append(nombre) :
+                    $(domElement).addClass("btn btn-warning").append(nombre)
+    })
+
+
+</script>

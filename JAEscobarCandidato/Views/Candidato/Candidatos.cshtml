@@ -1,0 +1,105 @@
+﻿@model object
+@{
+    ViewBag.Title = "Candidatos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Candidatos</h2>
+<div class="row" style="margin-bottom: 1rem">
+    <a href="@Url.Action("ConsultarCandidatos")" class="btn btn-success">Agregar usuarios</a>
+</div>
+<div class="row">
+    @if (!string.IsNullOrEmpty(ViewBag.Mensaje))
+    {
+        var result = ((bool, string, Exception, ML.Candidato))Model;
+        <div class="caja-componente-horizontal centrar-elemento" style="width: 100%;">
+            <div class="alert alert-danger text-justify" style="width: 100%;">
+                @result.Item2
+            </div>
+        </div>
+    }
+    else
+    {
+        var result = (ML.Candidato)(Model);
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>ApellidoPaterno</th>
+                            <th>ApellidoMaterno</th>
+                            <th>Email</th>
+                            <th>Genero</th>
+                            <th>FechaNacimiento</th>
+                            <th>Telefono</th>
+                            <th>Sinceridad</th>
+                            <th>Personalidad</th>
+                            <th>AutoEstima</th>
+                            <th>Estres</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in result.Candidatos)
+                        {
+                            <tr>
+                                <td>@item.Nombre</td>
+                                <td>@item.ApellidoPaterno</td>
+                                <td>@item.ApellidoMaterno</td>
+                                <td>@item.Email</td>
+                                <td>@item.Genero</td>
+                                <td>@item.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                                <td>@item.Telefono</td>
+                                <td>@item.Sinceridad.Nombre</td>
+                                <td>@item.Personalidad.Nombre</td>
+                                <td>@item.AutoEstima.Nombre</td>
+                                <td>@item.Estres.Nombre</td>
+                                <td>
+                                    <div class="caja-componente-vertical p-2">
+                                        <a onclick="Eliminar(this)" href="@Url.Action("EliminarCandidato", "Candidato", new { idCandidato = item.IdCandidato })" id="Eliminar" class="btn btn-danger glyphicon glyphicon-trash"></a>
+                                        <a href="@Url.Action("ConsultarCandidatos", new {idCandidato = item.IdCandidato})" id="Actualizar" class="btn btn-info glyphicon glyphicon-blackboard"></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script>
+    $(document).ready(() => {
+        $('a#Eliminar').on('click keypress dbclick', (e) => {
+            e.preventDefault();
+        })
+    })
+    function Eliminar(element) {
+        let ejecutar = confirm('Estas seguro de eliminar la información')
+        if (ejecutar) {
+            let query = $(element).prop('search').replace('?', '').split('=')
+            let object = {}
+            object[query[0]] = query[1]
+            $.ajax({
+                url: "@Url.Action("EliminarCandidato")",
+                method: 'POST',
+                dataType: 'JSON',
+                data: object,
+                success: function (result) {
+                    if (result.Item1) {
+                        alert('Se ha eliminado el candidato')
+                        window.location.reload()
+                    } else {
+                        alert(Item2)
+                    }
+                },
+                error: function (result) {
+                    alert(result.Item2)
+                }
+            })
+        }
+    }
+</script>

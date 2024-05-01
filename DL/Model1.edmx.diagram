@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4ddfd5eaed7149698460041b14073f74" Name="Diagram1">
+        <EntityTypeShape EntityType="JAEscobarCandidatoModel.AutoEstima" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="JAEscobarCandidatoModel.Estre" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="JAEscobarCandidatoModel.Personalidad" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="JAEscobarCandidatoModel.Sinceridad" Width="1.5" PointX="0.75" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="JAEscobarCandidatoModel.Candidato" Width="1.5" PointX="3" PointY="5" />
+        <AssociationConnector Association="JAEscobarCandidatoModel.FK_AutoEstima" />
+        <AssociationConnector Association="JAEscobarCandidatoModel.FK_Estres" />
+        <AssociationConnector Association="JAEscobarCandidatoModel.FK_Personalidad" />
+        <AssociationConnector Association="JAEscobarCandidatoModel.FK_Sinceridad" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

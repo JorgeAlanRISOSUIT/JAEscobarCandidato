@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "ArchivoMasivo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ArchivoMasivo</h2>
+@using (Html.BeginForm("ArchivoMasivo", "DashBoard", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="p-2 col-sm-12">
+            <div class="form-group col-sm-4">
+            </div>
+            <div class="form-group col-sm-4">
+                <div class="col-sm-6 form-group">
+                    <button class="btn btn-success">Archivo de excel</button>
+                </div>
+                <div class="col-sm-6 form-group">
+                    <button class="btn btn-default">Archivo de texto</button>
+                </div>
+            </div>
+            <div class="form-group col-sm-4"></div>
+        </div>
+        <div class="p-2 col-sm-12">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <input class="form-group form-control hidden-lg visible-lg" type="file" name="Candidatos" />
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                    <button class="btn btn-danger visible-lg hidden-lg">Cancelar</button>
+                </div>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script>
+    $(document).ready(() => {
+        let excel = $('button.btn-success')
+        let texto = $('button.btn-default')
+        let danger = $('button.btn-danger')
+        let input = $('input[type="file"]')
+        excel.on("click keypress", (e) => {
+            e.preventDefault()
+            texto.toggleClass('hidden-lg visible-lg', true)
+            input.toggleClass('hidden-lg visible-lg', false)
+            danger.toggleClass('hidden-lg visible-lg', false)
+        })
+        texto.on("click keypress", (e) => {
+            e.preventDefault()
+            excel.toggleClass('hidden-lg visible-lg', true)
+            input.toggleClass('hidden-lg visible-lg', false)
+            danger.toggleClass('hidden-lg visible-lg', false)
+        })
+        danger.on('click keypress', (event) => {
+            event.preventDefault()
+            if (texto.hasClass('hidden-lg visible-lg')) {
+                input.toggleClass('hidden-lg visible-lg')
+                danger.toggleClass('hidden-lg visible-lg')
+                texto.toggleClass('hidden-lg visible-lg')
+            } else if (excel.hasClass('hidden-lg visible-lg')) {
+                input.toggleClass('hidden-lg visible-lg')
+                danger.toggleClass('hidden-lg visible-lg')
+                excel.toggleClass('hidden-lg visible-lg')
+            }
+        })
+    })
+</script>

@@ -1,0 +1,155 @@
+﻿@model ML.Candidato
+@{
+    ViewBag.Title = "ObtenerEmpleado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Formulario</h2>
+<div class="caja-componente-horizontal centrar-elemento crecer-item">
+    @using (Html.BeginForm("ConsultarCandidatos", "Candidato", FormMethod.Post, new { @enctype = "multipart/form-data", @class = "caja-componente-vertical active p-2 col-sm-9" }))
+    {
+        if (Model.IdCandidato != 0)
+        {
+            @Html.HiddenFor(model => model.IdCandidato)
+        }
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Nombre, new { @class = "control-label col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ApellidoPaterno, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ApellidoMaterno, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @type = "email" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.FechaNacimiento, new { @class = "col-md-2" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.FechaNacimiento, new { @class = "form-control", @type = "date", @value= Model.FechaNacimiento != null ? Model.FechaNacimiento.ToString("dd/MM/yyyy") : "" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Genero, new { @class = "col-sm-2" })
+                <div class="btn-group-lg">
+                    @if (Model.IdCandidato == 0)
+                    {
+                        <div class="col-sm-8">
+                            <label for="Genero">
+                                @Html.RadioButtonFor(model => model.Genero, "M")
+                                Masculino
+                            </label>
+                            <label>
+                                @Html.RadioButtonFor(model => model.Genero, "F")
+                                Femenino
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+
+
+                        <div class="col-sm-8">
+                            <label for="Genero">
+                                @if (Model.Genero.Trim() == "M")
+                                {
+                                    @Html.RadioButtonFor(model => model.Genero, "M", new { @checked = (Model.Genero.Trim().Equals("M")) ? true : false })
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(model => model.Genero, "M")
+                                }
+                                Masculino
+                            </label>
+                            <label>
+                                @if (Model.Genero.Trim() == "F")
+                                {
+                                    @Html.RadioButtonFor(model => model.Genero, "F", new { @checked = (Model.Genero.Trim().Equals("F")) ? true : false })
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(model => model.Genero, "F")
+                                }
+                                Femenino
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Telefono, new { @class = "col-md-2" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Telefono, new { @class = "form-control", @type = "text" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Estres, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.Estres.IdEstres, new SelectList(Model.Estres.TiposEstres, "IdEstres", "Nombre", Model.IdCandidato == 0 ? 0 : Model.Estres.IdEstres), "Resultado de test del estrés", new { @class = "form-control", @id = "ddlEstres" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Personalidad, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.Personalidad.IdPersonalidad, new SelectList(Model.Personalidad.TiposPersonalidad, "IdPersonalidad", "Nombre", Model.IdCandidato == 0 ? 0 : Model.Personalidad.IdPersonalidad), "Resultado de test de Personalidad", new { @class = "form-control", @id = "ddlPersonalidad" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Sinceridad, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.Sinceridad.IdSinceridad, new SelectList(Model.Sinceridad.TiposSinceridad, "IdSinceridad", "Nombre", Model.IdCandidato == 0 ? 0 : Model.Sinceridad.IdSinceridad), "Resultado de test de Sinceridad", new { @class = "form-control", @id = "ddlSinceridad" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="form-group">
+                @Html.LabelFor(model => model.AutoEstima, new { @class = "col-sm-2" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.AutoEstima.IdAutoEstima, new SelectList(Model.AutoEstima.TiposAutoEstima, "IdAutoEstima", "Nombre", Model.IdCandidato == 0 ? 0 : Model.AutoEstima.IdAutoEstima), "Resultado de test de AutoEstima", new { @class = "form-control", @id = "ddlAutoEstima" })
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="caja-componente-horizontal separar-elemento ">
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
+                <div class="col-sm-6">
+                    <a href="@Url.Action("Candidatos")" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

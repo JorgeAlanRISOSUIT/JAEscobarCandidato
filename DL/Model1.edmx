@@ -1,0 +1,894 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JAEscobarCandidatoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AutoEstima">
+          <Key>
+            <PropertyRef Name="IdAutoEstima" />
+          </Key>
+          <Property Name="IdAutoEstima" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Candidato">
+          <Key>
+            <PropertyRef Name="IdCandidato" />
+          </Key>
+          <Property Name="IdCandidato" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="254" Nullable="false" />
+          <Property Name="Genero" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="FechaNacimiento" Type="date" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IdSinceridad" Type="int" />
+          <Property Name="IdAutoEstima" Type="int" />
+          <Property Name="IdPersonalidad" Type="int" />
+          <Property Name="IdEstres" Type="int" />
+        </EntityType>
+        <EntityType Name="Estres">
+          <Key>
+            <PropertyRef Name="IdEstres" />
+          </Key>
+          <Property Name="IdEstres" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Personalidad">
+          <Key>
+            <PropertyRef Name="IdPersonalidad" />
+          </Key>
+          <Property Name="IdPersonalidad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sinceridad">
+          <Key>
+            <PropertyRef Name="IdSinceridad" />
+          </Key>
+          <Property Name="IdSinceridad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AutoEstima">
+          <End Role="AutoEstima" Type="Self.AutoEstima" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoEstima">
+              <PropertyRef Name="IdAutoEstima" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdAutoEstima" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estres">
+          <End Role="Estres" Type="Self.Estres" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estres">
+              <PropertyRef Name="IdEstres" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdEstres" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personalidad">
+          <End Role="Personalidad" Type="Self.Personalidad" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personalidad">
+              <PropertyRef Name="IdPersonalidad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdPersonalidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sinceridad">
+          <End Role="Sinceridad" Type="Self.Sinceridad" Multiplicity="0..1" />
+          <End Role="Candidato" Type="Self.Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sinceridad">
+              <PropertyRef Name="IdSinceridad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdSinceridad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="Genero" Type="char" Mode="In" />
+          <Parameter Name="FechaNacimiento" Type="date" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
+          <Parameter Name="IdSinceridad" Type="int" Mode="In" />
+          <Parameter Name="IdAutoEstima" Type="int" Mode="In" />
+          <Parameter Name="IdPersonalidad" Type="int" Mode="In" />
+          <Parameter Name="IdEstres" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+        </Function>
+        <Function Name="EmpresaGetByIdVacante" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdEmpresa" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetAllCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllEmpresa" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetAllVacante" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="GetByIdCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ProcesadoCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Procesados" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+        </Function>
+        <Function Name="StatusPostulacionGetById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdStatusPostulacion" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UpdateCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCandidato" Type="int" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="Genero" Type="char" Mode="In" />
+          <Parameter Name="FechaNacimiento" Type="date" Mode="In" />
+          <Parameter Name="Telefono" Type="varchar" Mode="In" />
+          <Parameter Name="IdSinceridad" Type="int" Mode="In" />
+          <Parameter Name="IdAutoEstima" Type="int" Mode="In" />
+          <Parameter Name="IdPersonalidad" Type="int" Mode="In" />
+          <Parameter Name="IdEstres" Type="int" Mode="In" />
+        </Function>
+        <Function Name="VacanteGetByIdCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+        </Function>
+        <Function Name="VacanteStatusGetByIdCandidato" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVacante" Type="int" Mode="In" />
+          <Parameter Name="IdStatusPostulacion" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="JAEscobarCandidatoModelStoreContainer">
+          <EntitySet Name="AutoEstima" EntityType="Self.AutoEstima" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Candidato" EntityType="Self.Candidato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Estres" EntityType="Self.Estres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Personalidad" EntityType="Self.Personalidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sinceridad" EntityType="Self.Sinceridad" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AutoEstima" Association="Self.FK_AutoEstima">
+            <End Role="AutoEstima" EntitySet="AutoEstima" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estres" Association="Self.FK_Estres">
+            <End Role="Estres" EntitySet="Estres" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personalidad" Association="Self.FK_Personalidad">
+            <End Role="Personalidad" EntitySet="Personalidad" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sinceridad" Association="Self.FK_Sinceridad">
+            <End Role="Sinceridad" EntitySet="Sinceridad" />
+            <End Role="Candidato" EntitySet="Candidato" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JAEscobarCandidatoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AutoEstima">
+          <Key>
+            <PropertyRef Name="IdAutoEstima" />
+          </Key>
+          <Property Name="IdAutoEstima" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="JAEscobarCandidatoModel.FK_AutoEstima" FromRole="AutoEstima" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Estre">
+          <Key>
+            <PropertyRef Name="IdEstres" />
+          </Key>
+          <Property Name="IdEstres" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="JAEscobarCandidatoModel.FK_Estres" FromRole="Estre" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Personalidad">
+          <Key>
+            <PropertyRef Name="IdPersonalidad" />
+          </Key>
+          <Property Name="IdPersonalidad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="JAEscobarCandidatoModel.FK_Personalidad" FromRole="Personalidad" ToRole="Candidato" />
+        </EntityType>
+        <EntityType Name="Sinceridad">
+          <Key>
+            <PropertyRef Name="IdSinceridad" />
+          </Key>
+          <Property Name="IdSinceridad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Candidatoes" Relationship="JAEscobarCandidatoModel.FK_Sinceridad" FromRole="Sinceridad" ToRole="Candidato" />
+        </EntityType>
+        <EntityContainer Name="JAEscobarCandidatoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AutoEstimas" EntityType="Self.AutoEstima" />
+          <EntitySet Name="Estres" EntityType="Self.Estre" />
+          <EntitySet Name="Personalidads" EntityType="Self.Personalidad" />
+          <EntitySet Name="Sinceridads" EntityType="Self.Sinceridad" />
+          <EntitySet Name="Candidatoes" EntityType="JAEscobarCandidatoModel.Candidato" />
+          <AssociationSet Name="FK_AutoEstima" Association="JAEscobarCandidatoModel.FK_AutoEstima">
+            <End Role="AutoEstima" EntitySet="AutoEstimas" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Estres" Association="JAEscobarCandidatoModel.FK_Estres">
+            <End Role="Estre" EntitySet="Estres" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Personalidad" Association="JAEscobarCandidatoModel.FK_Personalidad">
+            <End Role="Personalidad" EntitySet="Personalidads" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sinceridad" Association="JAEscobarCandidatoModel.FK_Sinceridad">
+            <End Role="Sinceridad" EntitySet="Sinceridads" />
+            <End Role="Candidato" EntitySet="Candidatoes" />
+          </AssociationSet>
+          <FunctionImport Name="AddCandidato">
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Genero" Mode="In" Type="String" />
+            <Parameter Name="FechaNacimiento" Mode="In" Type="DateTime" />
+            <Parameter Name="Telefono" Mode="In" Type="String" />
+            <Parameter Name="IdSinceridad" Mode="In" Type="Int32" />
+            <Parameter Name="IdAutoEstima" Mode="In" Type="Int32" />
+            <Parameter Name="IdPersonalidad" Mode="In" Type="Int32" />
+            <Parameter Name="IdEstres" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteCandidato">
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllCandidato" ReturnType="Collection(JAEscobarCandidatoModel.GetAllCandidato_Result)" />
+          <FunctionImport Name="UpdateCandidato">
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Genero" Mode="In" Type="String" />
+            <Parameter Name="FechaNacimiento" Mode="In" Type="DateTime" />
+            <Parameter Name="Telefono" Mode="In" Type="String" />
+            <Parameter Name="IdSinceridad" Mode="In" Type="Int32" />
+            <Parameter Name="IdAutoEstima" Mode="In" Type="Int32" />
+            <Parameter Name="IdPersonalidad" Mode="In" Type="Int32" />
+            <Parameter Name="IdEstres" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetByIdCandidato" ReturnType="Collection(JAEscobarCandidatoModel.GetByIdCandidato_Result)">
+          <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllEmpresa" ReturnType="Collection(JAEscobarCandidatoModel.GetAllEmpresa_Result)" />
+          <FunctionImport Name="EmpresaGetByIdVacante" ReturnType="Collection(JAEscobarCandidatoModel.EmpresaGetByIdVacante_Result)">
+          <Parameter Name="IdEmpresa" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllVacante" ReturnType="Collection(JAEscobarCandidatoModel.GetAllVacante_Result)" />
+          <FunctionImport Name="VacanteGetByIdCandidato" ReturnType="Collection(JAEscobarCandidatoModel.VacanteGetByIdCandidato_Result)">
+          <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="VacanteStatusGetByIdCandidato" ReturnType="Collection(JAEscobarCandidatoModel.VacanteStatusGetByIdCandidato_Result)">
+            <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+            <Parameter Name="IdStatusPostulacion" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="StatusPostulacionGetById" ReturnType="Collection(JAEscobarCandidatoModel.StatusPostulacionGetById_Result)">
+          <Parameter Name="IdStatusPostulacion" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Procesados" ReturnType="Collection(JAEscobarCandidatoModel.Procesados_Result)">
+          <Parameter Name="IdVacante" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ProcesadoCandidato" ReturnType="Collection(JAEscobarCandidatoModel.ProcesadoCandidato_Result)">
+            <Parameter Name="IdCandidato" Mode="In" Type="Int32" />
+          </FunctionImport>
+          </EntityContainer>
+        <EntityType Name="Candidato">
+          <Key>
+            <PropertyRef Name="IdCandidato" />
+          </Key>
+          <Property Name="IdCandidato" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaterno" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="false" />
+          <Property Name="Genero" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Telefono" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IdSinceridad" Type="Int32" />
+          <Property Name="IdAutoEstima" Type="Int32" />
+          <Property Name="IdPersonalidad" Type="Int32" />
+          <Property Name="IdEstres" Type="Int32" />
+          <NavigationProperty Name="AutoEstima" Relationship="JAEscobarCandidatoModel.FK_AutoEstima" FromRole="Candidato" ToRole="AutoEstima" />
+          <NavigationProperty Name="Estre" Relationship="JAEscobarCandidatoModel.FK_Estres" FromRole="Candidato" ToRole="Estre" />
+          <NavigationProperty Name="Personalidad" Relationship="JAEscobarCandidatoModel.FK_Personalidad" FromRole="Candidato" ToRole="Personalidad" />
+          <NavigationProperty Name="Sinceridad" Relationship="JAEscobarCandidatoModel.FK_Sinceridad" FromRole="Candidato" ToRole="Sinceridad" />
+        </EntityType>
+        <Association Name="FK_AutoEstima">
+          <End Type="JAEscobarCandidatoModel.AutoEstima" Role="AutoEstima" Multiplicity="0..1" />
+          <End Type="JAEscobarCandidatoModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoEstima">
+              <PropertyRef Name="IdAutoEstima" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdAutoEstima" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Estres">
+          <End Type="JAEscobarCandidatoModel.Estre" Role="Estre" Multiplicity="0..1" />
+          <End Type="JAEscobarCandidatoModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Estre">
+              <PropertyRef Name="IdEstres" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdEstres" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Personalidad">
+          <End Type="JAEscobarCandidatoModel.Personalidad" Role="Personalidad" Multiplicity="0..1" />
+          <End Type="JAEscobarCandidatoModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Personalidad">
+              <PropertyRef Name="IdPersonalidad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdPersonalidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sinceridad">
+          <End Type="JAEscobarCandidatoModel.Sinceridad" Role="Sinceridad" Multiplicity="0..1" />
+          <End Type="JAEscobarCandidatoModel.Candidato" Role="Candidato" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sinceridad">
+              <PropertyRef Name="IdSinceridad" />
+            </Principal>
+            <Dependent Role="Candidato">
+              <PropertyRef Name="IdSinceridad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetAllCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="NivelSincero" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="GetByIdCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSincero" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="GetAllEmpresa_Result">
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="Nombre" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="EmpresaGetByIdVacante_Result">
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="GetAllVacante_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="VacanteGetByIdCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="VacanteStatusGetByIdCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="StatusPostulacionGetById_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="Procesados_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="ProcesadoCandidato_Result">
+          <Property Type="Int32" Name="IdCandidato" Nullable="false" />
+          <Property Type="String" Name="NombreCandidato" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoPaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ApellidoMaterno" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="254" />
+          <Property Type="String" Name="Genero" Nullable="false" MaxLength="2" />
+          <Property Type="DateTime" Name="FechaNacimiento" Nullable="false" />
+          <Property Type="String" Name="Telefono" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="IdSinceridad" Nullable="true" />
+          <Property Type="String" Name="NivelSinceridad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdAutoEstima" Nullable="true" />
+          <Property Type="String" Name="NivelAutoEstima" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPersonalidad" Nullable="true" />
+          <Property Type="String" Name="NivelPersonalidad" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdEstres" Nullable="true" />
+          <Property Type="String" Name="NivelEstres" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="IdPostulacion" Nullable="false" />
+          <Property Type="DateTime" Name="FechaPostulacion" Nullable="false" />
+          <Property Type="Int32" Name="IdStatusPostulacion" Nullable="false" />
+          <Property Type="String" Name="EstadoPostulacion" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="IdVacante" Nullable="false" />
+          <Property Type="String" Name="NombreVacante" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="FechaPublicación" Nullable="false" />
+          <Property Type="Int32" Name="IdEmpresa" Nullable="false" />
+          <Property Type="String" Name="NombreEmpresa" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JAEscobarCandidatoModelStoreContainer" CdmEntityContainer="JAEscobarCandidatoEntities">
+          <EntitySetMapping Name="AutoEstimas">
+            <EntityTypeMapping TypeName="JAEscobarCandidatoModel.AutoEstima">
+              <MappingFragment StoreEntitySet="AutoEstima">
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Estres">
+            <EntityTypeMapping TypeName="JAEscobarCandidatoModel.Estre">
+              <MappingFragment StoreEntitySet="Estres">
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Personalidads">
+            <EntityTypeMapping TypeName="JAEscobarCandidatoModel.Personalidad">
+              <MappingFragment StoreEntitySet="Personalidad">
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sinceridads">
+            <EntityTypeMapping TypeName="JAEscobarCandidatoModel.Sinceridad">
+              <MappingFragment StoreEntitySet="Sinceridad">
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Candidatoes">
+            <EntityTypeMapping TypeName="JAEscobarCandidatoModel.Candidato">
+              <MappingFragment StoreEntitySet="Candidato">
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddCandidato" FunctionName="JAEscobarCandidatoModel.Store.AddCandidato" />
+          <FunctionImportMapping FunctionImportName="DeleteCandidato" FunctionName="JAEscobarCandidatoModel.Store.DeleteCandidato" />
+          <FunctionImportMapping FunctionImportName="GetAllCandidato" FunctionName="JAEscobarCandidatoModel.Store.GetAllCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.GetAllCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="NivelSincero" ColumnName="NivelSincero" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateCandidato" FunctionName="JAEscobarCandidatoModel.Store.UpdateCandidato" />
+          <FunctionImportMapping FunctionImportName="GetByIdCandidato" FunctionName="JAEscobarCandidatoModel.Store.GetByIdCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.GetByIdCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSincero" ColumnName="NivelSincero" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllEmpresa" FunctionName="JAEscobarCandidatoModel.Store.GetAllEmpresa">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.GetAllEmpresa_Result">
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="EmpresaGetByIdVacante" FunctionName="JAEscobarCandidatoModel.Store.EmpresaGetByIdVacante">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.EmpresaGetByIdVacante_Result">
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetAllVacante" FunctionName="JAEscobarCandidatoModel.Store.GetAllVacante">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.GetAllVacante_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="VacanteGetByIdCandidato" FunctionName="JAEscobarCandidatoModel.Store.VacanteGetByIdCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.VacanteGetByIdCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="VacanteStatusGetByIdCandidato" FunctionName="JAEscobarCandidatoModel.Store.VacanteStatusGetByIdCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.VacanteStatusGetByIdCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="StatusPostulacionGetById" FunctionName="JAEscobarCandidatoModel.Store.StatusPostulacionGetById">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.StatusPostulacionGetById_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Procesados" FunctionName="JAEscobarCandidatoModel.Store.Procesados">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.Procesados_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ProcesadoCandidato" FunctionName="JAEscobarCandidatoModel.Store.ProcesadoCandidato">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="JAEscobarCandidatoModel.ProcesadoCandidato_Result">
+                <ScalarProperty Name="IdCandidato" ColumnName="IdCandidato" />
+                <ScalarProperty Name="NombreCandidato" ColumnName="NombreCandidato" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Genero" ColumnName="Genero" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="IdSinceridad" ColumnName="IdSinceridad" />
+                <ScalarProperty Name="NivelSinceridad" ColumnName="NivelSinceridad" />
+                <ScalarProperty Name="IdAutoEstima" ColumnName="IdAutoEstima" />
+                <ScalarProperty Name="NivelAutoEstima" ColumnName="NivelAutoEstima" />
+                <ScalarProperty Name="IdPersonalidad" ColumnName="IdPersonalidad" />
+                <ScalarProperty Name="NivelPersonalidad" ColumnName="NivelPersonalidad" />
+                <ScalarProperty Name="IdEstres" ColumnName="IdEstres" />
+                <ScalarProperty Name="NivelEstres" ColumnName="NivelEstres" />
+                <ScalarProperty Name="IdPostulacion" ColumnName="IdPostulacion" />
+                <ScalarProperty Name="FechaPostulacion" ColumnName="FechaPostulacion" />
+                <ScalarProperty Name="IdStatusPostulacion" ColumnName="IdStatusPostulacion" />
+                <ScalarProperty Name="EstadoPostulacion" ColumnName="EstadoPostulacion" />
+                <ScalarProperty Name="IdVacante" ColumnName="IdVacante" />
+                <ScalarProperty Name="NombreVacante" ColumnName="NombreVacante" />
+                <ScalarProperty Name="FechaPublicación" ColumnName="FechaPublicación" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="NombreEmpresa" ColumnName="NombreEmpresa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

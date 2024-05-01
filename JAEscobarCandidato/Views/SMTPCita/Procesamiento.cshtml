@@ -1,0 +1,89 @@
+﻿@model ML.Postulacion
+@{
+    ViewBag.Title = "Procesamiento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Procesamiento</h2>
+<div class="col-sm-2"></div>
+<div class="col-sm-6">
+    @using (Html.BeginForm("Procesamiento", "SMTPCita", FormMethod.Post, new { @class = "p-2 noto-sans-normal" }))
+    {
+        @Html.HiddenFor(model => model.Candidato.IdCandidato)
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.Nombre, new { @class = "col-sm-4 label-control" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.Nombre, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Candidato.Nombre)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.ApellidoPaterno, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.ApellidoPaterno, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Candidato.ApellidoPaterno)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.ApellidoMaterno, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.ApellidoMaterno, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Candidato.ApellidoMaterno)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.FechaNacimiento, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.FechaNacimiento, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Candidato.FechaNacimiento)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.Telefono, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.Telefono, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Candidato.Telefono)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Vacante.Nombre, "Vacante", new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Vacante.Nombre, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Vacante.Nombre)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Vacante.FechaPublicacion, "Fecha de publicación", new { @class="col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Vacante.FechaPublicacion, new {@class = "control-label"})
+                @Html.HiddenFor(model => model.Vacante.FechaPublicacion)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.FechaPostulacion, "Fecha de Postulacion", new { @class = "col-sm-4 control-label"})
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.FechaPostulacion, new {@class = "control-label"})
+                @Html.HiddenFor(model => model.FechaPostulacion)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Vacante.Empresa.Nombre, "Empresa", new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Vacante.Empresa.Nombre, new { @class = "control-label" })
+                @Html.HiddenFor(model => model.Vacante.Empresa.Nombre)
+            </div>
+        </div>
+        <div class="row form-group">
+            @Html.LabelFor(model => model.Candidato.Email, "Correo", new {@class = "col-sm-4 control-label"})
+            <div class="col-sm-4">
+                @Html.DisplayFor(model => model.Candidato.Email, new {@class = "control-label"})
+                @Html.HiddenFor(model => model.Candidato.Email)
+            </div>
+        </div>
+        <div class="row form-group form-inline">
+            <button type="submit" class="btn btn-info">Enviar</button>
+            <a href="@Url.Action("FormProceso")" class="btn btn-danger">Cancelar</a>
+        </div>
+    }
+</div>
+<div class="row form-group"></div>
